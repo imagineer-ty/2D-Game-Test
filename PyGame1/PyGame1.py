@@ -1,6 +1,6 @@
-
 import pygame
 import sys
+import random
 
 # Initialize Pygame
 pygame.init()
@@ -19,13 +19,14 @@ PLAYER_WIDTH = 50
 PLAYER_HEIGHT = 50
 PLAYER_COLOR = BLUE
 PLAYER_SPEED = 5
-PLAYER_JUMP_STRENGTH = 12
+PLAYER_JUMP_STRENGTH = 10
 GRAVITY = 0.5
 
 # Platform settings
 PLATFORM_COLOR = GREEN
 PLATFORM_WIDTH = 100
 PLATFORM_HEIGHT = 20
+PLATFORM_SPEED = 2
 
 # Create the screen
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
@@ -103,6 +104,14 @@ class Platform(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
+        self.change_x = random.choice([-PLATFORM_SPEED, PLATFORM_SPEED])
+
+    def update(self):
+        self.rect.x += self.change_x
+
+        # Reverse direction if the platform hits the screen edge
+        if self.rect.right >= SCREEN_WIDTH or self.rect.left <= 0:
+            self.change_x *= -1
 
 # Create sprite groups
 all_sprites = pygame.sprite.Group()
